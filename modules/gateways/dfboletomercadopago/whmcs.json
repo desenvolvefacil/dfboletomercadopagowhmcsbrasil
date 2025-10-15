@@ -1,0 +1,33 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-gateways",
+  "name": "dfboletomercadopago",
+  "license": "proprietary",
+  "category": "payments",
+  "description": {
+    "name": "DF Boleto Mercado Pago",
+    "tagline": "Modulo Boleto para WHMCS Gratuito com Retorno Automático",
+    "long": "💡 Simplifique a vida dos seus clientes e automatize seus recebimentos com o Módulo WHMCS Mercado Pago Boleto da Desenvolve Fácil! 🌟 Principais Benefícios 💼 Como ele transforma seu negócio 📥 Baixe agora e comece a receber via Boleto! 🔗 GitHub – DFBoleto Mercado Pago WHMCS Brasil 💳 Somente o bom e velho Boleto, rápido, seguro e sem complicação!",
+    "features": [
+      "Geração Automatica da Linha Digitalvel",
+	  "Geração Automatica do Link para Download do PDF do Boleto",
+      "Retorno automatico quando o cliente realiza o pagamento",
+      "Reembolso (Total ou Parcial) Automatico via WHMCS",
+      "Log de Portais Aprimorado",
+      "Código Externo no Mercado Pago Vinculado ao Código/Número da Fatura"
+    ]
+  },
+  "logo": {
+    "filename": "logo.png"
+  },
+  "support": {
+    "homepage": "https://www.desenvolvefacil.com.br/",
+    "docs_url": "https://github.com/desenvolvefacil/dfboletomercadopagowhmcsbrasil/"
+  },
+  "authors": [
+    {
+      "name": "Desenvolve Fácil",
+      "homepage": "https://www.desenvolvefacil.com.br/"
+    }
+  ]
+}
