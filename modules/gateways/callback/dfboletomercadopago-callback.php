@@ -14,7 +14,7 @@ $access_token = trim($gatewayParams['AccessTokenProducao'] ?? '');
 $input = file_get_contents('php://input');
 $notification = json_decode($input, true);
 
-logTransaction(PAYMENT_METHOD_BOLETO, json_encode($notification , JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), '1 - Notificação Recebida');
+logTransaction(PAYMENT_METHOD_BOLETO, json_encode($notification , JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Notificação Recebida');
 
 if (isset($notification['data']['id']) && ($notification['type'] ?? '') == 'payment') {
     $paymentId = $notification['data']['id'];
