@@ -5,16 +5,17 @@ require_once __DIR__ . '/../../../init.php';
 require_once __DIR__ . '/../../../includes/gatewayfunctions.php';
 require_once __DIR__ . '/../../../includes/invoicefunctions.php';
 
-define('PAYMENT_METHOD_BOLETO', 'dfboletomercadopago');
+define('PAYMENT_METHOD_MP_BOLETO', 'dfboletomercadopago');
 
-$gatewayParams = getGatewayVariables(PAYMENT_METHOD_BOLETO);
+
+$gatewayParams = getGatewayVariables(PAYMENT_METHOD_MP_BOLETO);
 
 $access_token = trim($gatewayParams['AccessTokenProducao'] ?? '');
 
 $input = file_get_contents('php://input');
 $notification = json_decode($input, true);
 
-logTransaction(PAYMENT_METHOD_BOLETO, json_encode($notification , JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Notificação Recebida');
+logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($notification , JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Notificação Recebida');
 
 if (isset($notification['data']['id']) && ($notification['type'] ?? '') == 'payment') {
     $paymentId = $notification['data']['id'];
@@ -58,16 +59,16 @@ if (isset($notification['data']['id']) && ($notification['type'] ?? '') == 'paym
         if ($status == 'approved') {
             if ($amountPaid < $invoiceTotal) {
                 // pagamento parcial: registra apenas o log, adiciona o valor parcial
-                logTransaction(PAYMENT_METHOD_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Pagamento parcial detectado');
-                addInvoicePayment($invoiceId, $paymentId, $amountPaid, $feeAmount, PAYMENT_METHOD_BOLETO);
+                logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Pagamento parcial detectado');
+                addInvoicePayment($invoiceId, $paymentId, $amountPaid, $feeAmount, PAYMENT_METHOD_MP_BOLETO);
             } else {
-                addInvoicePayment($invoiceId, $paymentId, $amountPaid, $feeAmount, PAYMENT_METHOD_BOLETO);
-                logTransaction(PAYMENT_METHOD_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Boleto Pago');
+                addInvoicePayment($invoiceId, $paymentId, $amountPaid, $feeAmount, PAYMENT_METHOD_MP_BOLETO);
+                logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Boleto Pago');
             }
         } elseif (in_array($status, ['cancelled', 'rejected'])) {
-            logTransaction(PAYMENT_METHOD_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Pagamento cancelado/rejeitado');
+            logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Pagamento cancelado/rejeitado');
         } else {
-            logTransaction(PAYMENT_METHOD_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Status ignorado');
+            logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Status ignorado');
         }
     }
 
