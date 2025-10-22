@@ -99,7 +99,7 @@ function dfboletomercadopago_link($params) {
     $cliente_bairro = trim($params['clientdetails']['address2']); 
 
     if($cliente_bairro == ""){
-        $cliente_bairro = "Bairro"
+        $cliente_bairro = "Bairro";
     }
     
     $cliente_numero = "0";
