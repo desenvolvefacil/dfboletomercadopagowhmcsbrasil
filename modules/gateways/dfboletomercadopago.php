@@ -97,7 +97,12 @@ function dfboletomercadopago_link($params) {
     $cliente_cep = trim($params['clientdetails']['postcode']); 
     $cliente_logradouro = trim($params['clientdetails']['address1']); 
     $cliente_bairro = trim($params['clientdetails']['address2']); 
-    $cliente_numero = "000";
+
+    if($cliente_bairro == ""){
+        $cliente_bairro = "Bairro"
+    }
+    
+    $cliente_numero = "0";
     $cliente_cidade = trim($params['clientdetails']['city']); 
     $cliente_uf = trim($params['clientdetails']['state']); 
   
