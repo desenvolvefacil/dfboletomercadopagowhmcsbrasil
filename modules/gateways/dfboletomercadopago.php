@@ -7,7 +7,7 @@ if (!defined("WHMCS")) {
 }
 
 // defina o nome do metodo de pagamento 
-define('PAYMENT_METHOD_NOME', 'dfboletomercadopago');
+define('PAYMENT_METHOD_MP_BOLETO', 'dfboletomercadopago');
 
 function dfboletomercadopago_MetaData() {
     return array(
@@ -40,11 +40,11 @@ function dfboletomercadopago_config_validate($params) {
         throw new \Exception('O campo AccessTokenProducao não foi preenchido');
     }
 
-    if (!Capsule::schema()->hasTable(PAYMENT_METHOD_NOME)) {
+    if (!Capsule::schema()->hasTable(PAYMENT_METHOD_MP_BOLETO)) {
         try {
 
             Capsule::schema()->create(
-                PAYMENT_METHOD_NOME, function ($table) {
+                PAYMENT_METHOD_MP_BOLETO, function ($table) {
                     /** @var \Illuminate\Database\Schema\Blueprint $table */
                     $table->bigInteger('idfatura')->unsigned();
     
@@ -113,7 +113,7 @@ function dfboletomercadopago_link($params) {
     //verifica se ja existe a fatura no BD
     try {
 
-        $fatbd = Capsule::table(PAYMENT_METHOD_NOME)
+        $fatbd = Capsule::table(PAYMENT_METHOD_MP_BOLETO)
                 ->select('idfatura', 'idpayment', 'linhadigitavel', 'boletourl', 'valor', 'vencimentoboleto')
                 ->where('idfatura', '=', $idfatura)
                 ->get();
@@ -201,10 +201,10 @@ function dfboletomercadopago_link($params) {
             $log["RetornoMP"] = $result;
 
             if($gerarnovoboleto==1){
-                logTransaction(PAYMENT_METHOD_NOME, date("Y-m-d H:i:s") , "Cliente Solicitou um novo Boleto");
+                logTransaction(PAYMENT_METHOD_MP_BOLETO, date("Y-m-d H:i:s") , "Cliente Solicitou um novo Boleto");
             }
             
-            logTransaction(PAYMENT_METHOD_NOME, json_encode($log), "Boleto Cancelado|Geracao De Fatura");
+            logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($log), "Boleto Cancelado|Geracao De Fatura");
         }
     }
 
@@ -292,16 +292,16 @@ function dfboletomercadopago_link($params) {
         $log["IdFatura"] = $idfatura;
         $log["RetornoMP"] = $result;
 
-        logTransaction(PAYMENT_METHOD_NOME, json_encode($log), "Boleto Gerado");
+        logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($log), "Boleto Gerado");
 
 
-         $existe = Capsule::table(PAYMENT_METHOD_NOME)
+         $existe = Capsule::table(PAYMENT_METHOD_MP_BOLETO)
             ->where('idfatura', $idfatura)
             ->first();
 
         if ($existe) {
             // Atualiza o registro existente
-            Capsule::table(PAYMENT_METHOD_NOME)->where('idfatura', $idfatura)
+            Capsule::table(PAYMENT_METHOD_MP_BOLETO)->where('idfatura', $idfatura)
                     ->update(
                             [
                                 'idpayment' => $idpayment,
@@ -313,7 +313,7 @@ function dfboletomercadopago_link($params) {
             );
         } else {
             // Insere um novo registro
-             Capsule::table(PAYMENT_METHOD_NOME)->insert(
+             Capsule::table(PAYMENT_METHOD_MP_BOLETO)->insert(
                     [
                         'idfatura' => $idfatura,
                         'idpayment' => $idpayment,
@@ -404,7 +404,7 @@ function dfboletomercadopago_refund($params) {
     //verifica se ja existe a fatura no BD
     try {
 
-        $fatbd = Capsule::table(PAYMENT_METHOD_NOME)
+        $fatbd = Capsule::table(PAYMENT_METHOD_MP_BOLETO)
                 ->select('idfatura', 'idpayment', 'linhadigitavel', 'boletourl', 'valor')
                 ->where('idfatura', '=', $idfatura)
                 ->get();
@@ -437,8 +437,8 @@ function dfboletomercadopago_refund($params) {
         curl_close($ch);
 
 
-        logTransaction(PAYMENT_METHOD_NOME, "httpCode = " . $httpCode, "Boleto Reembolsado");
-        logTransaction(PAYMENT_METHOD_NOME, json_decode($response, true), "Boleto Reembolsado");
+        logTransaction(PAYMENT_METHOD_MP_BOLETO, "httpCode = " . $httpCode, "Boleto Reembolsado");
+        logTransaction(PAYMENT_METHOD_MP_BOLETO, json_decode($response, true), "Boleto Reembolsado");
 
         if ($httpCode == 201 || $httpCode == 200) {
             $result = json_decode($response, true);
@@ -449,7 +449,7 @@ function dfboletomercadopago_refund($params) {
             $log["DadosBD"] = $fatbd;
             $log["RetornoMP"] = $result;
 
-            logTransaction(PAYMENT_METHOD_NOME, json_encode($log), "Boleto Reembolsado");
+            logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($log), "Boleto Reembolsado");
 
             return array(
                 // 'success' if successful, otherwise 'declined', 'error' for failure
