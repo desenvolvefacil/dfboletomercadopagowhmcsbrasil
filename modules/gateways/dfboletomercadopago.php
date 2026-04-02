@@ -102,7 +102,7 @@ function dfboletomercadopago_link($params) {
         $cliente_bairro = "Bairro";
     }
     
-    $cliente_numero = "0";
+    $cliente_numero = "SN";
     $cliente_cidade = trim($params['clientdetails']['city']); 
     $cliente_uf = trim($params['clientdetails']['state']); 
   
@@ -237,7 +237,7 @@ function dfboletomercadopago_link($params) {
         $url = "https://api.mercadopago.com/v1/payments";
         
         $data = [
-            "transaction_amount" => $valorfatura,
+            "transaction_amount" => floatval($valorfatura),
             "description" => "Fatura #" . $idfatura,
             "payment_method_id" => "bolbradesco",
             "payer" => [
@@ -264,7 +264,6 @@ function dfboletomercadopago_link($params) {
         ];
 
 
-
         //gera id unico
         $currentDate = new DateTime();
         $key = $currentDate->format("Y-m-d\TH:i:s.vP");
@@ -279,7 +278,7 @@ function dfboletomercadopago_link($params) {
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_NUMERIC_CHECK)); //utilizar JSON_NUMERIC_CHECK
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); //utilizar JSON_NUMERIC_CHECK
         // Executa requisição
         $response = curl_exec($ch);
 
