@@ -143,6 +143,8 @@ function dfboletomercadopago_link($params) {
     
     $htmlOutput = "";
 
+    $dataexpiracao = $params['dueDate'];
+
     if ($fatbd[0]->idfatura > 0) {
 
         $idpayment = $fatbd[0]->idpayment;
