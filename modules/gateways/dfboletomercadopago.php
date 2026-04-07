@@ -173,7 +173,7 @@ function dfboletomercadopago_link($params) {
         }
         
 
-        if ($valorfatura != $valorbd || $gerarnovoboleto == 1) {
+        if ($valorfatura != $valorbd) {
 
             $CancelouFatura = 1;
 
