@@ -173,6 +173,12 @@ function dfboletomercadopago_link($params) {
         }
         
 
+        if($gerarnovoboleto==1){
+            logTransaction(PAYMENT_METHOD_MP_BOLETO, date("Y-m-d H:i:s") , "Cliente Solicitou um novo Boleto");
+            $linhadigitavel = "";
+        }
+        
+
         if ($valorfatura != $valorbd) {
 
             $CancelouFatura = 1;
@@ -207,10 +213,6 @@ function dfboletomercadopago_link($params) {
             $log["DadosBD"] = $fatbd;
             $log["RetornoMP"] = $result;
 
-            if($gerarnovoboleto==1){
-                logTransaction(PAYMENT_METHOD_MP_BOLETO, date("Y-m-d H:i:s") , "Cliente Solicitou um novo Boleto");
-            }
-            
             logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($log), "Boleto Cancelado|Geracao De Fatura");
         }
     }
@@ -219,7 +221,7 @@ function dfboletomercadopago_link($params) {
     if ($linhadigitavel == "") {
         //gera um novo boleto
 
-        
+       
 
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -235,7 +237,7 @@ function dfboletomercadopago_link($params) {
             $valorfatura = 5.00;
         }
         
- 
+
         $url = "https://api.mercadopago.com/v1/payments";
         
         $data = [
