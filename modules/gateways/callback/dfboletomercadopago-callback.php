@@ -56,7 +56,29 @@ if (isset($notification['data']['id']) && ($notification['type'] ?? '') == 'paym
             'RetornoMP' => $payment
         ];
 
+        /*
+        if ($invoice->status == 'Paid') {
+            logTransaction(PAYMENT_METHOD_MP_BOLETO, "Fatura já paga: {$invoiceId}", 'Ignorado');
+            exit;
+        }
+        */
+
         if ($status == 'approved') {
+            // proteção contra duplicidade
+            $existingPayment = Capsule::table('tblaccounts')
+                ->where('transid', $paymentId)
+                ->first();
+        
+            if ($existingPayment) {
+                logTransaction(
+                    PAYMENT_METHOD_MP_BOLETO,
+                    "Pagamento já processado: {$paymentId}",
+                    'Duplicado Ignorado'
+                );
+                http_response_code(200);
+                exit;
+            }
+            
             if ($amountPaid < $invoiceTotal) {
                 // pagamento parcial: registra apenas o log, adiciona o valor parcial
                 logTransaction(PAYMENT_METHOD_MP_BOLETO, json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), 'Pagamento parcial detectado');
